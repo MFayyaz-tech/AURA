@@ -3488,8 +3488,15 @@
       let stripeReady = new Promise((resolve) => {
         window.__stripeReadyResolve = resolve;
       });
+
       (async function initStripeKey() {
-        const fallbackKey = proccess.env.STRIPE_PUBLISHABLE_KEY; // Replace with your fallback key
+        console.log("Initializing Stripe publishable key...");
+
+        let fallbackKey;
+        //= import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+        // Replace with your fallback key
+        //console.log("Using fallback publishable key:", fallbackKey);
+
         try {
           const resp = await fetch("/.netlify/functions/get-stripe-pk");
           if (resp.ok) {
@@ -3497,6 +3504,7 @@
             console.log("Fetched publishable key from endpoint", data);
             if (data && data.publishableKey) {
               stripe = Stripe(data.publishableKey);
+              fallbackKey = data.publishableKey; // in case of future fallback
               window.__stripePublishableKey = data.publishableKey;
               window.__clientUsesLive =
                 data.publishableKey.startsWith("pk_live");
@@ -4151,19 +4159,19 @@
           const contractItem = document.createElement("div");
           contractItem.className = "order-item";
           contractItem.innerHTML = `
-                    <div class="item-details">
-                        <div class="item-name">${
-                          cart.contract === "12M" ? "12-Month" : "6-Month"
-                        } Contract</div>
-                        <div class="item-description">${
-                          cart.contract === "12M" ? "30%" : "15%"
-                        } discount applied to all products</div>
-                    </div>
-                    <div class="item-controls">
-                        <button class="delete-btn" onclick="clearContract()">Remove</button>
-                    </div>
-                    <div class="item-price">$0</div>
-                `;
+                         <div class="item-details">
+                             <div class="item-name">${
+                               cart.contract === "12M" ? "12-Month" : "6-Month"
+                             } Contract</div>
+                             <div class="item-description">${
+                               cart.contract === "12M" ? "30%" : "15%"
+                             } discount applied to all products</div>
+                         </div>
+                         <div class="item-controls">
+                             <button class="delete-btn" onclick="clearContract()">Remove</button>
+                         </div>
+                         <div class="item-price">$0</div>
+                     `;
           orderItems.appendChild(contractItem);
         }
 
@@ -4177,15 +4185,15 @@
           const packageItem = document.createElement("div");
           packageItem.className = "order-item";
           packageItem.innerHTML = `
-                    <div class="item-details">
-                        <div class="item-name">${applicableTierName}</div>
-                        <div class="item-description">${cart.pieceCount} pieces • 6 photos per piece</div>
-                    </div>
-                    <div class="item-controls">
-                        <button class="delete-btn" onclick="removePackage()">Remove</button>
-                    </div>
-                    <div class="item-price">$${packageTotal}</div>
-                `;
+                         <div class="item-details">
+                             <div class="item-name">${applicableTierName}</div>
+                             <div class="item-description">${cart.pieceCount} pieces • 6 photos per piece</div>
+                         </div>
+                         <div class="item-controls">
+                             <button class="delete-btn" onclick="removePackage()">Remove</button>
+                         </div>
+                         <div class="item-price">$${packageTotal}</div>
+                     `;
           orderItems.appendChild(packageItem);
         }
 
@@ -4195,15 +4203,15 @@
           const campaignItem = document.createElement("div");
           campaignItem.className = "order-item";
           campaignItem.innerHTML = `
-                    <div class="item-details">
-                        <div class="item-name">${cart.campaign.name}</div>
-                        <div class="item-description">Flat rate bundle</div>
-                    </div>
-                    <div class="item-controls">
-                        <button class="delete-btn" onclick="removeCampaign()">Remove</button>
-                    </div>
-                    <div class="item-price">$${cart.campaign.price}</div>
-                `;
+                         <div class="item-details">
+                             <div class="item-name">${cart.campaign.name}</div>
+                             <div class="item-description">Flat rate bundle</div>
+                         </div>
+                         <div class="item-controls">
+                             <button class="delete-btn" onclick="removeCampaign()">Remove</button>
+                         </div>
+                         <div class="item-price">$${cart.campaign.price}</div>
+                     `;
           orderItems.appendChild(campaignItem);
         }
 
@@ -4214,19 +4222,19 @@
           const addonItem = document.createElement("div");
           addonItem.className = "order-item";
           addonItem.innerHTML = `
-                    <div class="item-details">
-                        <div class="item-name">${addon.name}</div>
-                    </div>
-                    <div class="item-controls">
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateAddonQuantity(${index}, -1)">-</button>
-                            <span class="quantity">${addon.quantity}</span>
-                            <button class="quantity-btn" onclick="updateAddonQuantity(${index}, 1)">+</button>
-                        </div>
-                        <button class="delete-btn" onclick="removeAddon(${index})">Remove</button>
-                    </div>
-                    <div class="item-price">$${addonTotal}</div>
-                `;
+                         <div class="item-details">
+                             <div class="item-name">${addon.name}</div>
+                         </div>
+                         <div class="item-controls">
+                             <div class="quantity-controls">
+                                 <button class="quantity-btn" onclick="updateAddonQuantity(${index}, -1)">-</button>
+                                 <span class="quantity">${addon.quantity}</span>
+                                 <button class="quantity-btn" onclick="updateAddonQuantity(${index}, 1)">+</button>
+                             </div>
+                             <button class="delete-btn" onclick="removeAddon(${index})">Remove</button>
+                         </div>
+                         <div class="item-price">$${addonTotal}</div>
+                     `;
           orderItems.appendChild(addonItem);
         });
 
@@ -4597,13 +4605,17 @@
             if (!sessionData.id) {
               throw new Error("No session ID returned from server");
             }
-
+            console.log(
+              "Redirecting to Stripe Checkout with session ID:",
+              sessionData.id
+            );
+            console.log("Stripe object:", stripe);
             // Redirect to Stripe Checkout (ensure stripe object has been initialised)
             if (!stripe) await stripeReady;
             const result = await stripe.redirectToCheckout({
               sessionId: sessionData.id,
             });
-
+            console.log("Stripe redirect result:", result);
             if (result.error) {
               throw new Error(result.error.message);
             }
