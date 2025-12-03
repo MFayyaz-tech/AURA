@@ -4570,28 +4570,28 @@
             }
             const sessionData = await response.json();
             // Check for livemode mismatch between session and client key
-            try {
-              const sessionIsLive = Boolean(sessionData.livemode);
-              const clientIsLive = Boolean(window.__clientUsesLive);
-              if (
-                typeof sessionData.livemode === "boolean" &&
-                sessionIsLive !== clientIsLive
-              ) {
-                throw new Error(
-                  `Stripe key mismatch: The checkout session is for ${
-                    sessionIsLive ? "live" : "test"
-                  } mode but your client is ${
-                    clientIsLive ? "live" : "test"
-                  }. Use matching keys.`
-                );
-              }
-            } catch (err) {
-              // Reset UI and rethrow to be handled by outer catch
-              buttonText.textContent = originalText;
-              spinner.style.display = "none";
-              button.disabled = false;
-              throw err;
-            }
+            // try {
+            //   const sessionIsLive = Boolean(sessionData.livemode);
+            //   const clientIsLive = Boolean(window.__clientUsesLive);
+            //   if (
+            //     typeof sessionData.livemode === "boolean" &&
+            //     sessionIsLive !== clientIsLive
+            //   ) {
+            //     throw new Error(
+            //       `Stripe key mismatch: The checkout session is for ${
+            //         sessionIsLive ? "live" : "test"
+            //       } mode but your client is ${
+            //         clientIsLive ? "live" : "test"
+            //       }. Use matching keys.`
+            //     );
+            //   }
+            // } catch (err) {
+            //   // Reset UI and rethrow to be handled by outer catch
+            //   buttonText.textContent = originalText;
+            //   spinner.style.display = "none";
+            //   button.disabled = false;
+            //   throw err;
+            // }
             console.log("Checkout session data:", sessionData);
 
             if (!sessionData.id) {
