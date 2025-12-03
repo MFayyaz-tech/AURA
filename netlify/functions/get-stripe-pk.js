@@ -2,7 +2,7 @@
 const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
 
 exports.handler = async (event) => {
-  const origin = process.env.SITE_URL || process.env.URL || "*";
+  const origin = process.env.SITE_URL || process.env.BASEURL || "*";
   const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": origin,

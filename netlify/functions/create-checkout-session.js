@@ -64,7 +64,7 @@ exports.handler = async (event) => {
 
   const siteUrl =
     process.env.SITE_URL ||
-    process.env.URL ||
+    process.env.BASEURL ||
     process.env.FRONTEND_URL ||
     event.headers.origin ||
     "*";
