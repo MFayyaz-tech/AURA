@@ -4675,6 +4675,27 @@
         .addEventListener("touchstart", function (e) {
           this.focus();
         });
+
+
+        
     </script>
+    <script>
+  function closeChristmasBanner() {
+    // Hide banner
+    const banner = document.getElementById("christmasBanner");
+    banner.style.display = "none";
+
+    // Apply mobile hero fixes
+    const hero = document.querySelector(".hero");
+    const video = document.querySelector(".hero-video");
+
+    // Update ONLY on mobile
+    if (window.innerWidth <= 765) {
+      hero.style.height = "338px";
+      video.style.marginTop = "0px";
+    }
+  }
+</script>
+
   </body>
 </html>
