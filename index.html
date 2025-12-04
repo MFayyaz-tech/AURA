@@ -559,20 +559,22 @@
       /* FULLSCREEN HERO WRAPPER */
       .hero {
         position: relative;
-        width: 100vw;
-        height: 100vh; /* Full screen height */
+        width: 100%;
+        height: fit-content; /* Full screen height */
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #000;
+        padding: 0px;
+        padding-top: 50px;
+        /* background: #000; */
       }
 
       /* UNIVERSAL VIDEO SETTINGS (DESKTOP + MOBILE) */
       .hero-video {
         width: 100%;
         height: 100%;
-        position: absolute;
+        /* position: absolute; */
         top: 0;
         left: 0;
 
@@ -601,21 +603,23 @@
       
 
       /* MOBILE OVERRIDES */
-      @media (max-width: 765px) {
-  .hero {
-    height: 400px; /* Fixed height for mobile */
-    width: 100vw;
-  }
+      @media (max-width: 769px) {
+        .hero {
+          padding-top: 0px;
+          margin-top: 0px;
+          width: 100vw;
+          height: fit-content; /* Adjust height for mobile */
+        }
 
-  .hero-video {
-    width: 100%;
-    height: 335px; /* Fixed height for mobile */
-    aspect-ratio: 9 / 16 !important;
-    object-fit: fill;
-    margin-top: 62px;
-  }
-}
-
+        .hero-video {
+          width: 100%;
+          height: auto; /* Fixed height for mobile */
+          aspect-ratio: 9 / 16 !important;
+          object-fit: fill;
+          margin-top: 0px;
+          background: transparent;
+        }
+      }
 
       section {
         max-width: 1440px;
@@ -4671,27 +4675,23 @@
         .addEventListener("touchstart", function (e) {
           this.focus();
         });
-
-
-        
     </script>
     <script>
-  function closeChristmasBanner() {
-    // Hide banner
-    const banner = document.getElementById("christmasBanner");
-    banner.style.display = "none";
+      function closeChristmasBanner() {
+        // Hide banner
+        const banner = document.getElementById("christmasBanner");
+        banner.style.display = "none";
 
-    // Apply mobile hero fixes
-    const hero = document.querySelector(".hero");
-    const video = document.querySelector(".hero-video");
+        // Apply mobile hero fixes
+        const hero = document.querySelector(".hero");
+        const video = document.querySelector(".hero-video");
 
-    // Update ONLY on mobile
-    if (window.innerWidth <= 765) {
-      hero.style.height = "338px";
-      video.style.marginTop = "0px";
-    }
-  }
-</script>
-
+        // Update ONLY on mobile
+        if (window.innerWidth <= 769) {
+          //hero.style.height = "338px";
+          hero.style.marginTop = "0px";
+        }
+      }
+    </script>
   </body>
 </html>
